@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgres_db:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: technical_test
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+  nestjs_app:
+    build: .
+    container_name: nestjs_app
+    environment:
+      DB_HOST: postgres_db
+      DB_PORT: 5432
+      DB_USERNAME: user
+      DB_PASSWORD: 12345
+      DB_DATABASE: technical_test
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres_db
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge

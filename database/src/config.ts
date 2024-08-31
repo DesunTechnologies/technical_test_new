@@ -1,16 +1,14 @@
-/* eslint-disable no-console */
-import * as dotenv from 'dotenv';
-dotenv.config();
+require('dotenv').config();
 
 const database = {
-  url: process.env.DATABASE_URL,
+  url: process.env.DATABASE_URL || 'postgres://postgres:12345@localhost:5436/technical_test',
   dialect: 'postgres',
   schema: 'public',
   logging: process.env.DEBUG_SEQUELIZE ? console.log : false,
 };
 
 module.exports = {
-  dev: database,
-  uat: database,
-  prod: database,
+  development: database,
+  test: database,
+  production: database,
 };

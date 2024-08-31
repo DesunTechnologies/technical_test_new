@@ -66,8 +66,8 @@ import helmet from 'helmet';
     },
   });
   // start server
-  const port = process.env.PORT || 8081;
-  const host = process.env.HOST || '127.0.0.1';
+  const port = process.env.PORT || 7100;
+  const host = process.env.HOST || '0.0.0.0';
   const server = await app.listen(port, host);
   logger.notify(`App listening at http://${host}:${port}`);
   server.keepAliveTimeout = 61 * 1000;

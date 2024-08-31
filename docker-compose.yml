@@ -1,10 +1,53 @@
-version: "3.2"
+version: '3.8'
+
 services:
-  technical_test_db:
-    image: postgres
-    ports: 
-     - 5436:5432
+  db:
+    image: postgres:15
+    container_name: postgres_db
     environment:
-      POSTGRES_DB: "technical_test"
-      POSTGRES_PASSWORD: "password"
-      POSTGRES_USER: "user"
+      POSTGRES_DB: technical_test
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"  # Maps container port 5432 to host port 5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  migrate:
+    build:
+      context: ./database  # Path to Dockerfile for migrations
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://user:password@db:5432/technical_test
+    command: sh -c "npm run migrate && npm run seed:all"
+    networks:
+      - backend
+
+  nestjs_app:
+    build:
+      context: ./backend  # Path to Dockerfile for backend
+    container_name: nestjs_app
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USERNAME: user
+      DB_PASSWORD: password
+      DB_DATABASE: technical_test
+      PORT: 7100  # Ensure this matches the application's port
+      HOST: 0.0.0.0  # This binds the application to all network interfaces within the container
+    ports:
+      - "7100:7100"  # Maps container port 7100 to host port 7100
+    depends_on:
+      - db
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres_data:
