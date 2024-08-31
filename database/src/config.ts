@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const database = {
-  url: process.env.DATABASE_URL || 'postgres://postgres:12345@localhost:5436/technical_test',
+  url: process.env.DATABASE_URL || 'postgres://postgres:password@localhost:5436/technical_test',
   dialect: 'postgres',
   schema: 'public',
   logging: process.env.DEBUG_SEQUELIZE ? console.log : false,

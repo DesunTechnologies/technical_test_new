@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
     ports:
-      - "5432:5432"  # Maps container port 5432 to host port 5432
+      - "5436:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -21,7 +21,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgres://user:password@db:5432/technical_test
+      DATABASE_URL: postgres://user:password@db:5436/technical_test
     command: sh -c "npm run migrate && npm run seed:all"
     networks:
       - backend
@@ -32,7 +32,7 @@ services:
     container_name: nestjs_app
     environment:
       DB_HOST: db
-      DB_PORT: 5432
+      DB_PORT: 5436
       DB_USERNAME: user
       DB_PASSWORD: password
       DB_DATABASE: technical_test
@@ -51,7 +51,7 @@ services:
       dockerfile: Dockerfile
     container_name: vue_frontend
     ports:
-      - "8080:80"  # Maps the container's port 80 (Nginx) to the host's port 8080
+      - "7200:80"
     networks:
       - frontend_network
 
