@@ -37,7 +37,7 @@ services:
       DB_PASSWORD: password
       DB_DATABASE: technical_test
       PORT: 7100  # Ensure this matches the application's port
-      HOST: 0.0.0.0  # This binds the application to all network interfaces within the container
+      HOST: 0.0.0.0  # Binds the application to all network interfaces within the container
     ports:
       - "7100:7100"  # Maps container port 7100 to host port 7100
     depends_on:
@@ -45,8 +45,21 @@ services:
     networks:
       - backend
 
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vue_frontend
+    ports:
+      - "8080:80"  # Maps the container's port 80 (Nginx) to the host's port 8080
+    networks:
+      - frontend_network
+
 networks:
   backend:
+    driver: bridge
+
+  frontend_network:
     driver: bridge
 
 volumes:
